@@ -43,11 +43,15 @@ console.log(
   '\nprocess.env.MONGODB_URI', MONGODB_URI,
 );
 
+console.log("before connect to mongoosedb")
 try {
+
   mongoose.connect(MONGO_URL,{ useNewUrlParser: true })
+  console.log("after sucessful connect to mongoosedb")
 } catch(err) {
   console.log('error connecting to mongoose db err:',err)
 }
+
 //const Cat = mongoose.model('Cat', { name: String });
 
 if (!User) console.log("User is null!")
