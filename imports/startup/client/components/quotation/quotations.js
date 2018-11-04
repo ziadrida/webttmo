@@ -36,7 +36,10 @@ const Quotations = ({ quotationsData }) => {
   export default Quotations
   */
 
-  getMuiTheme = () => createMuiTheme({
+  getMuiTheme = () => createMuiTheme({ // useNextVariants: true
+    typography: {
+   useNextVariants: true,
+    },
     // overrides: {
     //   MUIDataTableBodyCell: {
     //     root: {

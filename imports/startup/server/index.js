@@ -2,8 +2,11 @@ import { createApolloServer } from "meteor/apollo";
 import { makeExecutableSchema } from "graphql-tools";
 import {MongoClient, ObjectId} from 'mongodb'
 
+import cors from 'cors';
 import express from 'express';
 import  bodyParser from 'body-parser';
+
+
 //import  * as mongoose   from 'mongoose';
 
 var mongoose = require('mongoose');
@@ -29,6 +32,7 @@ const {
 } = process.env;
 
 const isNotProduction = NODE_ENV !== 'production';
+console.log("isNotProduction:",isNotProduction)
 
 console.log("imports/startup/server/index.js hi 2:01")
 
@@ -46,7 +50,7 @@ mongoose.connect(MONGO_URL)
 if (!User) console.log("User is null!")
 if (!Quotation) console.log("Quotation is null!")
 
-const port = 4000;
+
 // const server = new ApolloServer({ typeDefs, resolvers,context: ({ req }) => ({
 //     User,
 //     Quotation
@@ -63,7 +67,9 @@ const app = express();
 //server.applyMiddleware({ app });
 server.applyMiddleware({ app, path: '/graphql' });
 
-//app.set('port', (PORT || 3001));
+
+app.set('port', (isNotProduction? 4000:PORT || 4000));
+
 // bind express with graphql
 
 
@@ -72,18 +78,28 @@ server.applyMiddleware({ app, path: '/graphql' });
 //------------------------------------------------------------------------------
 // Apply middleware to parse incoming body requests into JSON format.
 // app.use(helmet());
-// app.use(express.urlencoded({ extended: true }));
+
+// When extended property is set to true, the URL-encoded data will be parsed with the qs library.
+//
+// On the contrary,
+//
+// when extended property is set to false, the URL-encoded data will instead be parsed with the querystring library.
+app.use(express.urlencoded({ extended: true }));
+
 // app.use(express.json());
 // // Enable the app to receive requests from the React app when running locally.
-// if (isNotProduction) {
-//   app.use('*', cors({ origin: 'http://localhost:3000' }));
-// }
+if (isNotProduction) {
+  console.log("DEVELOPMENT")
+   app.use('*', cors({ origin: 'http://localhost:3000' }));
+} else {
+  console.log("PRODUCTION")
+}
 //app.use('/graphql', bodyParser.json(), graphqlExpress({ schema, context: { User, Quotation } }));
 
 
 //app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 
 //app.listen(port);
-app.listen({ port }, () =>
-  console.log(`🚀 Server ready at http://localhost:${port}${server.graphqlPath}`),
-);
+app.listen(app.get('port'), () => {
+  console.log(`Apollo server listening on http://localhost:${app.get('port')}/graphql`);
+});
