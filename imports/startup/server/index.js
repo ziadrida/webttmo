@@ -44,7 +44,7 @@ console.log(
 );
 
 try {
-  mongoose.connect(MONGO_URL)
+  mongoose.connect(MONGO_URL,{ useNewUrlParser: true })
 } catch(err) {
   console.log('error connecting to mongoose db err:',err)
 }
