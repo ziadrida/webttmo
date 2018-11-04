@@ -43,8 +43,11 @@ console.log(
   '\nprocess.env.MONGODB_URI', MONGODB_URI,
 );
 
-
-mongoose.connect(MONGO_URL)
+try {
+  mongoose.connect(MONGO_URL)
+} catch(err) {
+  console.log('error connecting to mongoose db err:',err)
+}
 //const Cat = mongoose.model('Cat', { name: String });
 
 if (!User) console.log("User is null!")
