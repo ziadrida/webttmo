@@ -18,12 +18,29 @@ import schema from './graphql/exec-schema';
 import { User, Quotation } from './models';
 //import User from '../../schema/model';
 
+// Log env vars
+const {
+  MONGODB_URI,
+  ROOT_URL,
+  NODE_ENV,
+  PORT,
+  MONGO_URL,
+  JWT_PRIVATE_KEY,
+} = process.env;
 
+const isNotProduction = NODE_ENV !== 'production';
 
 console.log("imports/startup/server/index.js hi 2:01")
 
+console.log(
+  '\nprocess.env.NODE_ENV', NODE_ENV,
+  '\nprocess.env.PORT', PORT,
+  '\nprocess.env.MONGO_URL', MONGO_URL,
+  '\nprocess.env.MONGODB_URI', MONGODB_URI,
+);
 
-mongoose.connect("mongodb://webadmin:Igiveup2@ds149412.mlab.com:49412/heroku_lrtnbx3s")
+
+mongoose.connect(MONGO_URL)
 //const Cat = mongoose.model('Cat', { name: String });
 
 if (!User) console.log("User is null!")

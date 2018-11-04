@@ -21,6 +21,7 @@ const typeDefs = gql`
     notes: String
     final: Boolean
     active: Boolean
+    po_no: String
     sales_person: String
     username: String
     message: String
@@ -32,14 +33,17 @@ const typeDefs = gql`
       recipientID: String
       ownderId: String
       url: String
+      title: String
+      MPN: String
+      asin: String
       thumbnailImage: String
       source: String,
       price: Float
       qty: Int
       shipping: Float
       category: [String]
-      title: String
       condition: String
+      availability: String,
       weight: Float
       height: Float
       length: Float

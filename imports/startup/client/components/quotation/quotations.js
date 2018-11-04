@@ -72,7 +72,20 @@ const Quotations = ({ quotationsData }) => {
   if (!getQuotation) return <p>Search for quotation</p>
   console.log('variables:',variables)
 
-    const columns = ["quote_no", "username", "url","source","price","reason", "name","sales_person"];
+    const columns = ["quote_no","username", "Reason","Active/Final/PO",
+           {
+           name: "URL",
+           options: {
+             filter: true,
+             customBodyRender: (value, tableMeta, updateValue) => {
+               return (
+                 <a href={value} target="_blank">{value} </a>
+               );
+             }
+           }
+         },
+         "source","MPN[ASIN]","price","Price Type","Chg Wt","sales_person"];
+
     const options = {
       filterType: "dropdown",
       responsive: "scroll", //"stacked", //
@@ -88,15 +101,20 @@ const Quotations = ({ quotationsData }) => {
     var myData = []
   myData =  getQuotation.map(quotation => {
      item = (quotation.quotation && quotation.quotation.item?  quotation.quotation.item:null)
+     quote = (quotation.quotation? quotation.quotation: null)
      return([
       quotation.quote_no,
-      (quotation.quotation&&quotation.quotation.username? quotation.quotation.username:''),
-      (item.url ?item.url: ''),
-      (item.source ? item.source: ''),
-      (item.price? item.price:null),
-      (quotation.quotation && quotation.quotation.reason? quotation.quotation.reason:''),
-      (quotation.user && quotation.user.name? quotation.user.name:''),
-      (quotation.sales_person? quotation.sales_person: '')
+      (item &&item.username ? item.username:''),
+      (quote&&quote.reason? quote.reason:''),
+      (quote&&quote.active ? quote.active + '/' +quote.final+'/' +quote.po_no:''),
+      (item && item.url ?item.url: ''),
+      (item &&item.source ? item.source: ''),
+      (item &&item.MPN || item.asin ? item.MPN+'['+item.asin+']': ''),
+      (item &&item.price? item.price:null),
+      (quote.price_selection? quote.price_selection:''),
+      (item &&item.chargeableWeight? item.chargeableWeight: ''),
+      (quotation.sales_person? quotation.sales_person: ''),
+
 
           ])
         })

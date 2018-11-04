@@ -2,15 +2,16 @@ import gql from 'graphql-tag';
 //import postFragment from '../../post/fragment/post';
 
 //console.log("in grapphql quotation fraqment quotation.js")
+// user {
+//   name
+// }
 const quotationFragment = gql`
   fragment quotationFragment on Quotation {
     _id
     quote_no
     senderId
     sales_person
-    user {
-      name
-    }
+
     quotation {
       quote_no
       quote_date
@@ -18,6 +19,7 @@ const quotationFragment = gql`
       notes
       final
       active
+      po_no
       username
       sales_person
       message
@@ -25,6 +27,9 @@ const quotationFragment = gql`
       item {
           recipientID
           ownderId
+          title
+          MPN
+          asin
           url
           thumbnailImage
           source
@@ -32,7 +37,6 @@ const quotationFragment = gql`
           qty
           shipping
           category
-          title
           condition
           weight
           height

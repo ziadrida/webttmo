@@ -14,6 +14,7 @@ const schema = mongoose.Schema({
       notes: String,
       final: Boolean,
       active: Boolean,
+      po_no: String,
       username: String,
       sales_person: String,
       message: String,
@@ -21,15 +22,18 @@ const schema = mongoose.Schema({
       item: {
           recipientID: String,
           ownderId: String,
+          source: String,
+          title: String,
           url: String,
           thumbnailImage: String,
-          source: String,
+          MPN: String,
+          asin: String,
+          availability: String,
+          condition: String,
           price: Number,
           qty: Number,
           shipping: Number,
           category: [String],
-          title: String,
-          condition: String,
           weight: Number,
           height: Number,
           length: Number,
@@ -96,7 +100,7 @@ const schema = mongoose.Schema({
 );
 
 const Quotation = mongoose.model('Quotation1', schema);
-console.log('Quotation collection:',Quotation)
+console.log('NEW Quotation collection:',Quotation)
 if (!Quotation) console.log("quotation.js Quotation is null!")
 
 export default Quotation;

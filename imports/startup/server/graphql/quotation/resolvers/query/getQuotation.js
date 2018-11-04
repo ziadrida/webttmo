@@ -18,6 +18,12 @@ const getQuotation = async (root, args, context) => {
           }
         },
         {
+            "quotation.item.asin": {
+              "$regex": args.search,
+              "$options": "i"
+            }
+          },
+        {
           "quotation.item.title": {
             "$regex": args.search,
             "$options": "i"
@@ -25,6 +31,12 @@ const getQuotation = async (root, args, context) => {
         },
         {
           "quotation.item.category": {
+            "$regex": args.search,
+            "$options": "i"
+          }
+        },
+        {
+          "quotation.po_no": {
             "$regex": args.search,
             "$options": "i"
           }
@@ -38,8 +50,9 @@ const getQuotation = async (root, args, context) => {
   }
   // Query current logged in quotation
   try {
-    const curQuotation = await Quotation.find(queryStr).limit(10).exec();
-    console.log("curQuotation:",curQuotation)
+    console.log('getQuotation queryStr:',queryStr)
+    const curQuotation = await Quotation.find(queryStr).sort({"quote_no":-1}).limit(50).exec();
+    console.log("curQuotation.length:",curQuotation.length)
     return curQuotation;
   } catch (exc) {
     console.log(exc);
