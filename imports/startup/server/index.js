@@ -100,6 +100,8 @@ if (isNotProduction) {
 //app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 
 //app.listen(port);
+
+
 app.listen(app.get('port'), () => {
-  console.log(`Apollo server listening on http://localhost:${app.get('port')}/graphql`);
+  console.log(`Apollo server listening on port: ${app.get('port')}`);
 });
