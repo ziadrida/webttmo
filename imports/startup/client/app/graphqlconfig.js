@@ -1,11 +1,14 @@
 
 import { Meteor } from "meteor/meteor";
-import { ApolloClient } from 'apollo-boost';
+import { Accounts } from 'meteor/accounts-base'
+import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { HttpLink } from "apollo-link-http";
 import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { onError } from "apollo-link-error";
+import { MeteorAccountsLink } from 'meteor/apollo'
+import { ApolloLink } from 'apollo-link'
 
 // REACT_APP_GRAPHQL_URI is defined in .env file. When the app is deployed to
 // heroku, the REACT_APP_GRAPHQL_URI env variable needs to be reset to point to
@@ -42,19 +45,49 @@ import { onError } from "apollo-link-error";
 console.log("===> In graphqlconfig.js")
 
 console.log('Meteor.absoluteUrl("graphql"): ',Meteor.absoluteUrl("graphql"))
-
+//"http://localhost:4000/graphql"
 const httpLink = new HttpLink({
-  uri:  "http://localhost:4000/graphql" //Meteor.absoluteUrl("graphql")
+  uri:  Meteor.absoluteUrl("graphql")
   //  uri:  "http://localhost:4000/graphql" //Meteor.absoluteUrl("graphql")
 });
 console.log('==>httplink:',httpLink)
+//
+// const cache = new InMemoryCache();
+//
+// const client = new ApolloClient({
+//   link: httpLink,
+//   cache
+// });
 
-const cache = new InMemoryCache();
+const link1 = ApolloLink.from([
+    new MeteorAccountsLink(),
+    new HttpLink({
+      uri: '/graphql'
+    })
+  ])
+
+  console.log("using MeteorAccountsLink link:",link1)
+
+// const client = new ApolloClient({
+//   uri: '/graphql',
+//   request: operation =>
+//     operation.setContext(() => ({
+//       headers: {
+//         authorization: Accounts._storedLoginToken()
+//       }
+//     }))
+// })
 
 const client = new ApolloClient({
-  link: httpLink,
-  cache
-});
+  link: ApolloLink.from([
+    new MeteorAccountsLink(),
+    new HttpLink({
+      uri: '/graphql'
+    })
+  ]),
+  cache: new InMemoryCache()
+})
+
 // ,
 // onError: ({ networkError, graphQLErrors }) => {
 //  console.log('==>graphQLErrors', graphQLErrors)

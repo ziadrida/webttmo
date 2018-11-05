@@ -1,6 +1,12 @@
 import { createApolloServer } from "meteor/apollo";
 import { makeExecutableSchema } from "graphql-tools";
 import {MongoClient, ObjectId} from 'mongodb'
+//import {ApolloServer,graphqlExpress, graphiqlExpress} from 'apollo-server-express' // same as 'graphql-server-express'
+import { ApolloServer, gql  } from 'apollo-server-express';
+
+
+import { WebApp } from 'meteor/webapp'
+import { getUser } from 'meteor/apollo'
 
 import cors from 'cors';
 import express from 'express';
@@ -11,11 +17,9 @@ import  bodyParser from 'body-parser';
 
 var mongoose = require('mongoose');
 
-//import {ApolloServer,graphqlExpress, graphiqlExpress} from 'apollo-server-express' // same as 'graphql-server-express'
-import { ApolloServer, gql  } from 'apollo-server-express';
 
-import typeDefs from './graphql/merge-schemas';
-import resolvers from './graphql/merge-schemas';
+// import typeDefs from './graphql/merge-schemas';
+// import resolvers from './graphql/merge-schemas';
 import schema from './graphql/exec-schema';
 
 import { User, Quotation } from './models';
@@ -63,17 +67,54 @@ if (!Quotation) console.log("Quotation is null!")
 //     Quotation
 //   }) });
 //console.log('schema:',schema)
-  const server = new ApolloServer({
-  schema,
-  context: async ({ req }) => ({
-    User,
-    Quotation,
-  })
-});
+// from Nov5, 2018
+//   const server = new ApolloServer({
+//   schema,
+//   context: async ({ req }) => ({
+//     User,
+//     Quotation,
+//   })
+// });
+
+
 const app = express();
 //server.applyMiddleware({ app });
-server.applyMiddleware({ app, path: '/graphql' });
+// from Nov 5, 2018
+//server.applyMiddleware({ app, path: '/graphql' });
 
+
+
+const server = new ApolloServer({
+  schema,
+  context: async ({ req }) => ({
+    user: await getUser(req.headers.authorization)
+  })
+})
+
+// for meteor account intergration
+server.applyMiddleware({
+  app: WebApp.connectHandlers,
+  path: '/graphql'
+})
+
+WebApp.connectHandlers.use('/graphql', (req, res) => {
+  if (req.method === 'GET') {
+    res.end()
+  }
+})
+// There are two options for using an IDE that will make authenticated GraphQL requests:
+//
+// Apollo devtools GraphiQL:
+// Login to your app
+// Open Apollo devtools to the GraphiQL section
+// GraphQL Playground:
+// Install with brew cask install graphql-playground
+// Login to your app
+// In the browser console, enter localStorage.getItem('Meteor.loginToken')
+// Copy the string returned
+// In Playground:
+// At the top, enter http://localhost:3000/graphql
+// Under HTTP HEADERS, enter { "authorization": "copied string" }
 
 app.set('port', (isNotProduction? 4000:PORT || 4000));
 
