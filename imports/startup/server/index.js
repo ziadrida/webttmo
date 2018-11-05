@@ -84,11 +84,18 @@ const app = express();
 
 
 
+
 const server = new ApolloServer({
   schema,
   context: async ({ req }) => ({
     user: await getUser(req.headers.authorization)
-  })
+    //user: await getUser(req)
+  }),
+  playground: {
+    settings: {
+      'editor.theme': 'light',
+    },
+  },
 })
 
 // for meteor account intergration

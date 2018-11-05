@@ -42,13 +42,26 @@ import { ApolloLink } from 'apollo-link'
 //     },
 //   };
 // });
-console.log("===> In graphqlconfig.js")
+
+// REACT_APP_GRAPHQL_URI is defined in .env file. When the app is deployed to
+// heroku, the REACT_APP_GRAPHQL_URI env variable needs to be reset to point to
+// https://YOUR-APP-NAME.herokuapp.com/graphql (this will have precedence over
+// the default value provided in the .env file). See the .env file on how to do
+// this.
+const { NODE_ENV, REACT_APP_GRAPHQL_URI } = process.env;
+
+const isNotProduction = NODE_ENV !== 'production';
+//const uri = isNotProduction ? 'http://localhost:3001/graphql' : REACT_APP_GRAPHQL_URI;
+const uri = isNotProduction ? 'http://localhost:4000/graphql' : REACT_APP_GRAPHQL_URI;
+
+// Log
+console.log("===> In graphqlconfig.js uri:", uri)
 
 console.log('Meteor.absoluteUrl("graphql"): ',Meteor.absoluteUrl("graphql"))
 //"http://localhost:4000/graphql"
 const httpLink = new HttpLink({
-  uri:  Meteor.absoluteUrl("graphql")
-  //  uri:  "http://localhost:4000/graphql" //Meteor.absoluteUrl("graphql")
+//  uri:  Meteor.absoluteUrl("graphql")
+   uri:  uri //"http://localhost:4000/graphql" //Meteor.absoluteUrl("graphql")
 });
 console.log('==>httplink:',httpLink)
 //
@@ -88,6 +101,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 })
 
+console.log("client:",client)
 // ,
 // onError: ({ networkError, graphQLErrors }) => {
 //  console.log('==>graphQLErrors', graphQLErrors)
