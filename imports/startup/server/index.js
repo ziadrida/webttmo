@@ -43,7 +43,7 @@ console.log(
   '\nprocess.env.MONGODB_URI', MONGODB_URI,
 );
 
-console.log("before connect to mongoosedb")
+console.log("==> before connect to mongoosedb")
 try {
 
   mongoose.connect(MONGO_URL,{ useNewUrlParser: true })
