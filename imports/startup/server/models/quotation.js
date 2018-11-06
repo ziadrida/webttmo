@@ -1,6 +1,19 @@
 import mongoose  from 'mongoose';
 
 console.log('Importing quotation')
+const PriceDest = mongoose.Schema({
+  destination: String,
+  type: String,
+  delivery: String,
+  price: Number
+})
+
+const PriceOptions = mongoose.Schema({
+        amm_exp: PriceDest,
+        amm_std: PriceDest,
+        aq_std: PriceDest,
+//  aq_exp: PriceDest,
+})
 
 const schema = mongoose.Schema({
   _id: String,
@@ -11,6 +24,7 @@ const schema = mongoose.Schema({
       quote_no: Number,
       quote_date: String,
       price_selection: String,
+      prices: PriceOptions,
       notes: String,
       final: Boolean,
       active: Boolean,
@@ -64,35 +78,9 @@ const schema = mongoose.Schema({
               match_score: Number
           },
               recipentID: String
-          },
-          prices: {
-              amm_exp: {
-                  destination: String,
-                  type: String,
-                  delivery: String,
-                  price: Number
-              },
-              amm_std: {
-                  destination: String,
-                  type: String,
-                  delivery: String,
-                  price: Number
-              },
-              aq_exp: {
-                  destination: String,
-                  type: String,
-                  delivery: String,
-                  price: Number
-              },
-              aq_std: {
-                  destination: String,
-                  type: String,
-                  delivery: String,
-                  price: Number
-              }
           }
       },
-      date_created:String,
+      date_created:{ type: Date, default: Date.now },
       create_by: String,
       last_updated: String,
       updated_by: String,

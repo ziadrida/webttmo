@@ -26,7 +26,9 @@ const typeDefs = gql`
     username: String
     message: String
     reason: String
+
     item: Item
+    prices: PriceOptions
   }
 
   type Item {
@@ -39,7 +41,7 @@ const typeDefs = gql`
       thumbnailImage: String
       source: String,
       price: Float
-      qty: Int
+      qty: Float
       shipping: Float
       category: [String]
       condition: String
@@ -57,10 +59,25 @@ const typeDefs = gql`
       recipentID: String
     }
 
+    type PriceOptions  {
+          amm_exp: PriceDest
+          amm_std: PriceDest
+          aq_std: PriceDest
+
+    }
+    type PriceDest {
+          destination: String
+          type: String
+          delivery: String
+          price: Float
+    }
+
   type Query {
         getQuotation(quote_no: Int, search: String): [Quotation]
         user: User
+
   }
+
 `;
 
 //  user: User

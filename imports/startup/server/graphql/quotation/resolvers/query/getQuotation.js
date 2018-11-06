@@ -12,6 +12,16 @@ const getQuotation = async (root, args, context) => {
   if (args.search) {
     queryStr = {
       "$or": [{
+          "quotation.sales_person": {
+            "$regex": args.search,
+            "$options": "i"
+          }
+        },{
+          "quotation.item.username": {
+            "$regex": args.search,
+            "$options": "i"
+          }
+        },{
           "quotation.item.MPN": {
             "$regex": args.search,
             "$options": "i"
@@ -40,7 +50,14 @@ const getQuotation = async (root, args, context) => {
             "$regex": args.search,
             "$options": "i"
           }
+        },
+        {
+          "quotation.item.source": {
+            "$regex": args.search,
+            "$options": "i"
+          }
         }
+
       ]
     }
   } else {
@@ -51,8 +68,9 @@ const getQuotation = async (root, args, context) => {
   // Query current logged in quotation
   try {
     console.log('getQuotation queryStr:',queryStr)
-    const curQuotation = await Quotation.find(queryStr).sort({"quote_no":-1}).limit(50).exec();
+    const curQuotation = await Quotation.find(queryStr,{'quotation.price':0}).sort({"quote_no":-1}).limit(100).exec();
     console.log("curQuotation.length:",curQuotation.length)
+   console.log("curQuotation:",JSON.stringify(curQuotation))
     return curQuotation;
   } catch (exc) {
     console.log(exc);

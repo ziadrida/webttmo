@@ -75,9 +75,9 @@ const Quotations = ({ quotationsData }) => {
   if (!getQuotation) return <p>Search for quotation</p>
   console.log('variables:',variables)
 
-    const columns = ["quote_no","username", "Reason","Active/Final/PO",
+    const columns = ["quote_no","Quote Date","username", "Reason","Active/Final/PO",
            {
-           name: "URL",
+           name: "URL/HTTP link",
            options: {
              filter: true,
              customBodyRender: (value, tableMeta, updateValue) => {
@@ -87,7 +87,7 @@ const Quotations = ({ quotationsData }) => {
              }
            }
          },
-         "source","MPN[ASIN]","price","Price Type","Chg Wt","sales_person"];
+         "source","MPN[ASIN]","price","Qty","Sale Price","Dest","Price Opts","Chg Wt","sales_person"];
 
     const options = {
       filterType: "dropdown",
@@ -105,17 +105,26 @@ const Quotations = ({ quotationsData }) => {
   myData =  getQuotation.map(quotation => {
      item = (quotation.quotation && quotation.quotation.item?  quotation.quotation.item:null)
      quote = (quotation.quotation? quotation.quotation: null)
+      salePrice = (quote && quote.prices &&quote.price_selection && quote.prices.amm_exp? quote.prices[quote.price_selection].price:'')
      return([
       quotation.quote_no,
+       (quote.quote_date? quote.quote_date.substring(0, 21):''),
       (item &&item.username ? item.username:''),
       (quote&&quote.reason? quote.reason:''),
-      (quote&&quote.active ? quote.active + '/' +quote.final+'/' +quote.po_no:''),
+      (quote&&quote.active ? quote.active + (quote.final!= undefined?  '/' +quote.final:'/'+false)+(quote.po_no? '/' +quote.po_no:''):''),
       (item && item.url ?item.url: ''),
       (item &&item.source ? item.source: ''),
       (item &&item.MPN || item.asin ? item.MPN+'['+item.asin+']': ''),
-      (item &&item.price? item.price:null),
+      (item &&item.price? item.price.toFixed(1):''),
+        (item &&item.qty? (item.qty>9999?9999:item.qty):''),
+      salePrice,
       (quote.price_selection? quote.price_selection:''),
-      (item &&item.chargeableWeight? item.chargeableWeight: ''),
+      (quote.price_selection?
+        'amm_exp:'+quote.prices['amm_exp'].price+'\n'+
+        'amm_std:'+quote.prices['amm_std'].price+'\n'+
+        'aq_std:'+ quote.prices['aq_std'].price+'\n'
+        :''),
+      (item &&item.chargeableWeight? item.chargeableWeight.toFixed(1): ''),
       (quotation.sales_person? quotation.sales_person: ''),
 
 
@@ -128,7 +137,7 @@ const Quotations = ({ quotationsData }) => {
   if (!variables.quoteNo && !variables.search ) return <p> Enter search </p>
 
   if (loading) {
-    return <p>Loading quotations ...</p>;
+    return <p>Loading quotations ... {}</p>;
   }
   if (error) {
     return <p>{error.message}</p>;

@@ -6,53 +6,74 @@ import gql from 'graphql-tag';
 //   name
 // }
 const quotationFragment = gql`
-  fragment quotationFragment on Quotation {
-    _id
-    quote_no
-    senderId
-    sales_person
+fragment quotationFragment on Quotation {
+  _id
+  quote_no
+  senderId
+  sales_person
 
-    quotation {
-      quote_no
-      quote_date
-      price_selection
-      notes
-      final
-      active
-      po_no
+  quotation {
+    quote_no
+    quote_date
+    price_selection
+    notes
+    final
+    active
+    po_no
+    username
+    sales_person
+    message
+    reason
+    item {
+      recipientID
+      ownderId
+      title
+      MPN
+      asin
+      url
+      thumbnailImage
+      source
+      price
+      qty
+      shipping
+      category
+      condition
+      weight
+      height
+      length
+      width
+      language
       username
-      sales_person
-      message
-      reason
-      item {
-          recipientID
-          ownderId
-          title
-          MPN
-          asin
-          url
-          thumbnailImage
-          source
-          price
-          qty
-          shipping
-          category
-          condition
-          weight
-          height
-          length
-          width
-          language
-          username
-          chargeableWeight
-          final
-          requestor
-          quote_no
-          recipentID
-          }
+      chargeableWeight
+      final
+      requestor
+      quote_no
+      recipentID
+
+    }
+    prices {
+      amm_exp {
+        destination
+        type
+        delivery
+        price
+      }
+      amm_std {
+        destination
+        type
+        delivery
+        price
+      }
+      aq_std {
+        destination
+        type
+        delivery
+        price
+      }
+
     }
   }
-
+}
 `;
 
 // posts {
